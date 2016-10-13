@@ -1,33 +1,46 @@
 "use strict";
 
 function init() {
-    var e = require("../lib/react.js"),
-        t = require("./popup/popup.js"),
-        s = require("./menubar/menubar.js"),
-        r = require("./toolbar/toolbar.js"),
-        o = require("./sidebar/sidebar.js"),
-        i = require("./develop/develop.js"),
-        p = require("./detail/detail.js"),
-        a = require("./setting/setting.js"),
-        n = require("./toast/toast.js"),
-        h = require("./edit/edit.js"),
-        c = require("./dialog/dialog.js"),
-        u = require("./about/about.js"),
-        l = require("../stores/windowStores.js"),
-        j = require("./mobile/mobile.js"),
-        m = e.createClass({
+    var React = require("../lib/react.js"),
+        popup = require("./popup/popup.js"),
+        menubar = require("./menubar/menubar.js"),
+        toolbar = require("./toolbar/toolbar.js"),
+        sidebar = require("./sidebar/sidebar.js"),
+        develop = require("./develop/develop.js"),
+        detail = require("./detail/detail.js"),
+        setting = require("./setting/setting.js"),
+        toast = require("./toast/toast.js"),
+        edit = require("./edit/edit.js"),
+        dialog = require("./dialog/dialog.js"),
+        about = require("./about/about.js"),
+        windowStores = require("../stores/windowStores.js"),
+        mobile = require("./mobile/mobile.js"),
+        Main = React.createClass({
             displayName: "Main",
             getInitialState: function() {
                 return { show: "debug", showSetting: !1 }
             },
             optProject: function(e) { this.setState({ show: e }) },
             showSetting: function() { this.setState({ showSetting: !this.state.showSetting }) },
-            componentDidMount: function() { l.on("SHOW_SETTING", this.showSetting) },
+            componentDidMount: function() { windowStores.on("SHOW_SETTING", this.showSetting) },
             render: function() {
-                return e.createElement("div", { className: "main" }, e.createElement(s, { appQuit: this.props.appQuit, appMin: this.props.appMin, appMax: this.props.appMax, showSetting: this.showSetting, project: this.props.project }), e.createElement(r, { project: this.props.project }), e.createElement("div", { className: "body" }, e.createElement(o, { project: this.props.project, optProject: this.optProject }), e.createElement(i, { show: this.state.show, optDebugger: this.optDebugger, project: this.props.project }), e.createElement(h, { show: this.state.show, project: this.props.project }), e.createElement(p, { project: this.props.project, show: this.state.show }), e.createElement(j, { show: this.state.show })), e.createElement(n, null), e.createElement(a, { show: this.state.showSetting, showSetting: this.showSetting }), e.createElement(c, null), e.createElement(t, null), e.createElement(u, null))
+                return React.createElement("div", { className: "main" }, 
+                    React.createElement(menubar, { appQuit: this.props.appQuit, appMin: this.props.appMin, appMax: this.props.appMax, showSetting: this.showSetting, project: this.props.project }), 
+                    React.createElement(toolbar, { project: this.props.project }), 
+                    React.createElement("div", { className: "body" }, 
+                        React.createElement(sidebar, { project: this.props.project, optProject: this.optProject }), 
+                        React.createElement(develop, { show: this.state.show, optDebugger: this.optDebugger, project: this.props.project }), 
+                        React.createElement(edit, { show: this.state.show, project: this.props.project }), 
+                        React.createElement(detail, { project: this.props.project, show: this.state.show }), 
+                        React.createElement(mobile, { show: this.state.show })), 
+                    React.createElement(toast, null), 
+                    React.createElement(setting, { show: this.state.showSetting, showSetting: this.showSetting }), 
+                    React.createElement(dialog, null), 
+                    React.createElement(popup, null), 
+                    React.createElement(about, null))
             }
         });
-    _exports = m
+    _exports = Main
 }
 var _exports;
 init(), module.exports = _exports;
