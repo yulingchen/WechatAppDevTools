@@ -1,39 +1,39 @@
 "use strict";
 
 function init() {
-    var e = require("../../lib/react.js"),
-        t = require("../../lib/react-dom.js"),
-        r = require("./toolbar.js"),
-        i = require("./scanDialog.js"),
-        s = require("./webviewtab.js"),
-        o = require("./webview.js"),
-        a = require("../../weapp/utils/tools.js"),
-        n = require("../../utils/file.js"),
-        c = require("../../stores/webviewStores.js"),
+    var React = require("../../lib/react.js"),
+        ReactDOM = require("../../lib/react-dom.js"),
+        toolbar = require("./toolbar.js"),
+        scanDialog = require("./scanDialog.js"),
+        webviewtab = require("./webviewtab.js"),
+        webview = require("./webview.js"),
+        tools = require("../../weapp/utils/tools.js"),
+        file = require("../../utils/file.js"),
+        webviewStores = require("../../stores/webviewStores.js"),
         p = (require("../../stores/windowStores.js"), require("../../actions/windowActions.js")),
-        u = require("../../actions/webviewActions.js"),
+        webviewActions = require("../../actions/webviewActions.js"),
         l = (require("../../stores/projectStores.js"), require("../../cssStr/cssStr.js")),
-        f = require("../../common/log/log.js"),
-        v = require("../../common/request/request.js"),
-        d = require("./actions/simulatorActions.js"),
-        h = require("./webviewBackwardMask.js"),
-        g = require("../../utils/tools.js"),
-        w = require("url"),
-        b = require("../../config/urlConfig.js"),
+        log = require("../../common/log/log.js"),
+        request = require("../../common/request/request.js"),
+        simulatorActions = require("./actions/simulatorActions.js"),
+        webviewBackwardMask = require("./webviewBackwardMask.js"),
+        app_tools = require("../../utils/tools.js"),
+        url = require("url"),
+        urlConfig = require("../../config/urlConfig.js"),
         m = 0,
         S = 0,
-        _ = e.createClass({
+        _ = React.createClass({
             displayName: "Controller",
             getInitialState: function() {
                 var e = "app/html/about.html",
                     t = {},
-                    r = c.getOffset(),
+                    r = webviewStores.getOffset(),
                     i = {};
                 if (this.props.project) {
                     var s = this.props.project;
-                    e = a.getWeappURL(s);
+                    e = tools.getWeappURL(s);
                     try {
-                        var o = a.getProjectConfig(s);
+                        var o = tools.getProjectConfig(s);
                         t = o.tabBar || {}, i = o.window || {}
                     } catch (n) {}
                 }
@@ -46,7 +46,7 @@ function init() {
                     i.appendChild(s), s.src = r.dataURI
                 }
                 i.className = "simulator-animate-png";
-                var o = t.findDOMNode(this.refs["webview" + this.state.currentWebviewID]),
+                var o = ReactDOM.findDOMNode(this.refs["webview" + this.state.currentWebviewID]),
                     a = o.getBoundingClientRect(),
                     n = a.top,
                     c = a.left,
@@ -79,7 +79,7 @@ function init() {
                         if (0 === e) return { v: void 0 };
                         for (c = e, p = []; s-- && o.state.list[c] && 0 != c;) p.push(c), n = o.state.list[c], c = n.prevWebviewID;
                         o.state.list[c] || (c = 0);
-                        var i = t.findDOMNode(o.refs["webview" + e]),
+                        var i = ReactDOM.findDOMNode(o.refs["webview" + e]),
                             u = i.querySelector(".webviewbody" + e);
                         u.captureVisibleRegion(function(e) {
                             var i = o.setAnimateImg(!1, { dataURI: e }),
@@ -89,11 +89,11 @@ function init() {
                             o.setState({ list: n, currentWebviewID: c }, function() {
                                 i.addEventListener("transitionend", function() {
                                     global.contentDocumentBody.removeChild(i);
-                                    var e = t.findDOMNode(o.refs["webview" + c]),
+                                    var e = ReactDOM.findDOMNode(o.refs["webview" + c]),
                                         s = e.querySelector(".webviewbody" + c);
                                     if (o.props.project) {
                                         var n = r.src,
-                                            u = a.getBaseURL(o.props.project);
+                                            u = tools.getBaseURL(o.props.project);
                                         0 === n.indexOf(u) && o.postAppRoute(s.src, o.state.currentWebviewID, "navigateBack")
                                     }
                                     for (var l in p) o.getSimulatorActions("S_DELETE_WEBVIEW", null, { webviewID: p[l] });
@@ -110,7 +110,7 @@ function init() {
                     r = e.webviewID,
                     i = e.url,
                     s = e.showUrl,
-                    o = a.getPageJSON(this.props.project, i),
+                    o = tools.getPageJSON(this.props.project, i),
                     n = o.backgroundColor || "#ffffff",
                     c = this.setAnimateImg(!0, { color: n });
                 c.style.transform = "translate3d(0,0,0)", c.addEventListener("transitionend", function() {
@@ -124,10 +124,10 @@ function init() {
                     r = e.webviewID,
                     i = e.url,
                     s = e.showUrl,
-                    o = a.getPageJSON(this.props.project, i),
+                    o = tools.getPageJSON(this.props.project, i),
                     n = (o.backgroundColor || "#ffffff", this.props.project),
-                    c = a.getWeappURL(n, { justHost: !0 });
-                i = w.resolve(c, i);
+                    c = tools.getWeappURL(n, { justHost: !0 });
+                i = url.resolve(c, i);
                 var p = { currentWebviewID: r };
                 if ("number" != typeof r) {
                     r = ++m;
@@ -137,9 +137,9 @@ function init() {
                 return this.setState(p, function() { t.postAppRoute(i, r, "switchTab"), t.getSimulatorActions("S_CHANGE_CURRENT_WEBVIEW", null, { webviewID: r }) }), r
             },
             _webviewSDK: function(e, t, r, i) {
-                if (f.info("Webview.js WEBVIEW_SDK " + e + ", " + JSON.stringify(t) + ", " + r + ", " + JSON.stringify(i)), "openUrlWithExtraWebview" === r) {
+                if (log.info("Webview.js WEBVIEW_SDK " + e + ", " + JSON.stringify(t) + ", " + r + ", " + JSON.stringify(i)), "openUrlWithExtraWebview" === r) {
                     this._openNewWebview({ webviewID: e, url: t.args.url, showUrl: !0 });
-                    var s = c.getWebviewPorts();
+                    var s = webviewStores.getWebviewPorts();
                     for (var o in s) {
                         var a = s[o];
                         a.postMessage({ sdkName: "onAppRoute", data: {}, to: "appservice" })
@@ -171,7 +171,7 @@ function init() {
                 var t = "";
                 if (this.props.project) {
                     var r = this.props.project;
-                    t = a.getWeappURL(r, { justHost: !0 })
+                    t = tools.getWeappURL(r, { justHost: !0 })
                 }
                 return e.replace(t, "")
             },
@@ -179,7 +179,7 @@ function init() {
                 var s = this;
                 if ("redirectTo" === e) {
                     var o = this.state.currentWebviewID,
-                        a = t.findDOMNode(this.refs["webview" + o]),
+                        a = ReactDOM.findDOMNode(this.refs["webview" + o]),
                         p = a.querySelector(".webviewbody" + o);
                     p.src = r.args.url, i({ errMsg: "redirectTo:ok", url: this._getShortUrl(r.args.url), webviewId: o })
                 } else if ("navigateTo" === e) {
@@ -187,7 +187,7 @@ function init() {
                     this._openNewWebview({ webviewID: l, url: r.args.url, showUrl: !0 }), i({ errMsg: "navigateTo:ok", url: this._getShortUrl(r.args.url), webviewId: m + 1 })
                 } else if ("navigateBack" === e) ! function() {
                     var e = s.state.currentWebviewID,
-                        o = t.findDOMNode(s.refs["webview" + e]),
+                        o = ReactDOM.findDOMNode(s.refs["webview" + e]),
                         a = o.querySelector(".webviewbody" + e);
                     s.goBack(s.state.currentWebviewID, a, !1, r.args.pages || 1), setTimeout(function() { i({ errMsg: "navigateBack:ok", url: s._getShortUrl(a.src) }) }, 200)
                 }();
@@ -220,15 +220,15 @@ function init() {
                         W = I.appid
                     }
                     var E = { scope: ["snsapi_base"] };
-                    v({ url: b.jsLoginURL + "?appid=" + W, method: "post", body: JSON.stringify(E), needToken: 1 }, function(e, t, r) {
+                    request({ url: urlConfig.jsLoginURL + "?appid=" + W, method: "post", body: JSON.stringify(E), needToken: 1 }, function(e, t, r) {
                         var s = {},
                             o = "";
                         e || 200 !== t.statusCode || (r = JSON.parse(r), r.baseresponse && (0 == r.baseresponse.errcode ? (s = { code: r.code }, s.errMsg = "login:ok") : o = r.baseresponse.errmsg)), s.errMsg || (s.errMsg = "login:fail; " + o), i(s)
                     })
                 } else if ("scanCode" === e) ! function() {
-                    var e = function s(e) { i("ok" == e.msg ? { errMsg: "scanCode:ok", result: e.result, scanType: e.scanType } : "cancel" == e.msg ? { errMsg: "scanCode:cancel" } : { errMsg: "scanCode:" + e.msg }), c.removeListener("SCAN_CODE_RETURN", s) },
+                    var e = function s(e) { i("ok" == e.msg ? { errMsg: "scanCode:ok", result: e.result, scanType: e.scanType } : "cancel" == e.msg ? { errMsg: "scanCode:cancel" } : { errMsg: "scanCode:" + e.msg }), webviewStores.removeListener("SCAN_CODE_RETURN", s) },
                         t = r.args;
-                    setTimeout(function() { u.showScanCodeDialog(t), c.on("SCAN_CODE_RETURN", e) }, 0)
+                    setTimeout(function() { webviewActions.showScanCodeDialog(t), webviewStores.on("SCAN_CODE_RETURN", e) }, 0)
                 }();
                 else if ("operateWXData" === e) ! function() {
                     var e = "",
@@ -237,7 +237,7 @@ function init() {
                         var o = s.props.project;
                         e = o.appid
                     }
-                    v({ url: b.jsOperateWXDATAURL + "?appid=" + e, method: "post", body: JSON.stringify({ data: JSON.stringify(t.data || {}) }), needToken: 1 }, function(r, o, a) {
+                    request({ url: urlConfig.jsOperateWXDATAURL + "?appid=" + e, method: "post", body: JSON.stringify({ data: JSON.stringify(t.data || {}) }), needToken: 1 }, function(r, o, a) {
                         var n = {},
                             p = "";
                         if (!r && 200 === o.statusCode && (a = JSON.parse(a), a.baseresponse))
@@ -249,15 +249,15 @@ function init() {
                                             var p = s[0];
                                             if (a && p.checked) {
                                                 var u = { data: JSON.stringify(t.data || {}), grant_scope: p.scope };
-                                                v({ url: b.jsOperateWXDATAURL + "?appid=" + e, method: "post", body: JSON.stringify(u), needToken: 1 }, function(e, t, r) {
+                                                request({ url: urlConfig.jsOperateWXDATAURL + "?appid=" + e, method: "post", body: JSON.stringify(u), needToken: 1 }, function(e, t, r) {
                                                     var s = {};
                                                     if (!e && 200 === t.statusCode && (r = JSON.parse(r), r.baseresponse && 0 === r.baseresponse.errcode)) try { s.data = JSON.parse(r.data), s.errMsg = "operateWXData:ok" } catch (o) { s.errMsg = "operateWXData:fail" }
                                                     s.errMsg || (s.errMsg = "operateWXData:fail; "), i(s)
                                                 })
                                             } else i(n);
-                                            c.removeListener("AUTHORIZE_SDK_RETURN_" + r, o)
+                                            webviewStores.removeListener("AUTHORIZE_SDK_RETURN_" + r, o)
                                         };
-                                        return c.on("AUTHORIZE_SDK_RETURN_" + l, r), s.getSimulatorActions("S_AUTHORIZE_SDK", s.state.currentWebviewID, { authorizeSdkId: l, url: a.appicon_url + "/0", appname: a.appname, scope_list: [a.scope] }), { v: void 0 }
+                                        return webviewStores.on("AUTHORIZE_SDK_RETURN_" + l, r), s.getSimulatorActions("S_AUTHORIZE_SDK", s.state.currentWebviewID, { authorizeSdkId: l, url: a.appicon_url + "/0", appname: a.appname, scope_list: [a.scope] }), { v: void 0 }
                                     }();
                                     if ("object" === ("undefined" == typeof f ? "undefined" : _typeof(f))) return f.v
                                 } else p = a.baseresponse.errmsg;
@@ -272,7 +272,7 @@ function init() {
                     }
                     var o = r.args,
                         a = { scope: o.scope || [] };
-                    v({ url: b.jsAuthorizeURL + "?appid=" + e, method: "post", body: JSON.stringify(a), needToken: 1 }, function(t, r, o) {
+                    request({ url: urlConfig.jsAuthorizeURL + "?appid=" + e, method: "post", body: JSON.stringify(a), needToken: 1 }, function(t, r, o) {
                         var a = {},
                             n = "";
                         if (!t && 200 === r.statusCode && (o = JSON.parse(o), o.baseresponse))
@@ -288,14 +288,14 @@ function init() {
                                         }
                                         console.log(s);
                                         var l = { scope: n };
-                                        v({ url: b.jsAuthorizeConfirmURL + "?appid=" + e, method: "post", body: JSON.stringify(l), needToken: 1 }, function(e, t, r) {
+                                        request({ url: urlConfig.jsAuthorizeConfirmURL + "?appid=" + e, method: "post", body: JSON.stringify(l), needToken: 1 }, function(e, t, r) {
                                             var s = {};
                                             e || 200 !== t.statusCode || (r = JSON.parse(r), r.baseresponse && 0 === r.baseresponse.errcode && (s.errMsg = "authorize:ok")), s.errMsg || (s.errMsg = "authorize:fail; "), i(s)
                                         })
                                     } else i(a);
-                                    c.removeListener("AUTHORIZE_SDK_RETURN_" + t, r)
+                                    webviewStores.removeListener("AUTHORIZE_SDK_RETURN_" + t, r)
                                 };
-                                return c.on("AUTHORIZE_SDK_RETURN_" + p, t), s.getSimulatorActions("S_AUTHORIZE_SDK", s.state.currentWebviewID, { authorizeSdkId: p, url: o.appicon_url + "/0", appname: o.appname, scope_list: o.scope_list }), { v: void 0 }
+                                return webviewStores.on("AUTHORIZE_SDK_RETURN_" + p, t), s.getSimulatorActions("S_AUTHORIZE_SDK", s.state.currentWebviewID, { authorizeSdkId: p, url: o.appicon_url + "/0", appname: o.appname, scope_list: o.scope_list }), { v: void 0 }
                             }();
                             if ("object" === ("undefined" == typeof u ? "undefined" : _typeof(u))) return u.v
                         } else n = o.baseresponse.errmsg;
@@ -304,7 +304,7 @@ function init() {
                 }();
                 else if ("chooseImage" === e || "chooseVideo" === e) {
                     var D = "chooseImage" === e ? "image/*" : "video/*";
-                    g.chooseFile({
+                    app_tools.chooseFile({
                         accept: D,
                         multiple: !0,
                         sucCall: function(t) {
@@ -313,7 +313,7 @@ function init() {
                                 a = o.length;
                             if (a > 9) return void i({ errmsg: e + ":fail" });
                             var c = [];
-                            o.forEach(function(e) { c.push(n.copyFileToTemp(e, r.hash)) });
+                            o.forEach(function(e) { c.push(file.copyFileToTemp(e, r.hash)) });
                             var p = { errMsg: e + ":ok", tempFilePaths: c };
                             i(p)
                         },
@@ -326,7 +326,7 @@ function init() {
             },
             _upWebviewStatus: function(e, t) { this.upCurrentWebviewURL(t.url) },
             isTabWebview: function(e) {
-                var t = a.getFileNameFromUrl(e, this.props.project),
+                var t = tools.getFileNameFromUrl(e, this.props.project),
                     r = this.state.tabBar,
                     i = r.list || [],
                     s = !!i.find(function(e) {
@@ -337,35 +337,35 @@ function init() {
             upCurrentWebviewURL: function(e) {
                 if (this.props.project && "about:blank" !== e) {
                     var t = this.isTabWebview(e),
-                        r = c.getOffset();
+                        r = webviewStores.getOffset();
                     t && (r.height = r.height - 45), this.setState({ showTabBar: !!t, offset: r })
                 }
             },
             addAsWebview: function(e) { this.asWebviewID = e },
             getSimulatorActions: function(e, r, i) {
                 var s = { currentWebviewID: this.state.currentWebviewID };
-                if (d(e, r, i, s), "S_CHANGE_CURRENT_WEBVIEW" === e) {
+                if (simulatorActions(e, r, i, s), "S_CHANGE_CURRENT_WEBVIEW" === e) {
                     var o = i.webviewID;
                     if (o === this.state.currentWebviewID) {
-                        var a = t.findDOMNode(this.refs["webview" + o]),
+                        var a = ReactDOM.findDOMNode(this.refs["webview" + o]),
                             n = a.querySelector("webview"),
                             c = n.src;
                         this.upCurrentWebviewURL(c), p.changeUrl(c, o)
                     }
                 }
             },
-            componentDidMount: function() { c.on("WEBVIEW_SDK", this._webviewSDK), c.on("CHANGE_WEBVIEW_ID", this._changeWebviewID), c.on("SET_WEBVIEW_INFO", this._setWebviewInfo), c.on("AS_PUBLISH", this._postMessageToAllWebview), c.on("SEND_AS_SDK", this._asSdk), c.on("SET_WEBVIEW_SNAPSHOT", this._setWebviewSnapshot), c.on("UP_WEBVIEW_STATUS", this._upWebviewStatus) },
-            componentWillUnmount: function() { c.removeListener("WEBVIEW_SDK", this._webviewSDK), c.removeListener("CHANGE_WEBVIEW_ID", this._changeWebviewID), c.removeListener("SET_WEBVIEW_INFO", this._setWebviewInfo), c.removeListener("AS_PUBLISH", this._postMessageToAllWebview), c.removeListener("SEND_AS_SDK", this._asSdk), c.removeListener("SET_WEBVIEW_SNAPSHOT", this._setWebviewSnapshot), c.removeListener("UP_WEBVIEW_STATUS", this._upWebviewStatus) },
+            componentDidMount: function() { webviewStores.on("WEBVIEW_SDK", this._webviewSDK), webviewStores.on("CHANGE_WEBVIEW_ID", this._changeWebviewID), webviewStores.on("SET_WEBVIEW_INFO", this._setWebviewInfo), webviewStores.on("AS_PUBLISH", this._postMessageToAllWebview), webviewStores.on("SEND_AS_SDK", this._asSdk), webviewStores.on("SET_WEBVIEW_SNAPSHOT", this._setWebviewSnapshot), webviewStores.on("UP_WEBVIEW_STATUS", this._upWebviewStatus) },
+            componentWillUnmount: function() { webviewStores.removeListener("WEBVIEW_SDK", this._webviewSDK), webviewStores.removeListener("CHANGE_WEBVIEW_ID", this._changeWebviewID), webviewStores.removeListener("SET_WEBVIEW_INFO", this._setWebviewInfo), webviewStores.removeListener("AS_PUBLISH", this._postMessageToAllWebview), webviewStores.removeListener("SEND_AS_SDK", this._asSdk), webviewStores.removeListener("SET_WEBVIEW_SNAPSHOT", this._setWebviewSnapshot), webviewStores.removeListener("UP_WEBVIEW_STATUS", this._upWebviewStatus) },
             render: function() {
                 var t = [];
                 for (var a in this.state.list) {
                     var n = a == this.state.currentWebviewID ? {} : l.webviewDisplayNone,
                         c = this.state.list[a],
                         p = this.isTabWebview(c.href);
-                    t.push(e.createElement("div", { key: a, style: n }, e.createElement(o, { project: this.props.project, offset: this.state.offset, ref: "webview" + a, isMatch: p, href: c.href, config: c.config, hideBack: !!c.hideBack, webviewID: a, goBack: this.goBack, addAsWebview: this.addAsWebview, getSimulatorActions: this.getSimulatorActions, postAppRoute: this.postAppRoute })))
+                    t.push(React.createElement("div", { key: a, style: n }, React.createElement(webview, { project: this.props.project, offset: this.state.offset, ref: "webview" + a, isMatch: p, href: c.href, config: c.config, hideBack: !!c.hideBack, webviewID: a, goBack: this.goBack, addAsWebview: this.addAsWebview, getSimulatorActions: this.getSimulatorActions, postAppRoute: this.postAppRoute })))
                 }
                 var u = { width: this.state.offset.width, margin: "0 auto" };
-                return e.createElement("div", { className: "simulator-wrapper" }, e.createElement(r, { getSimulatorActions: this.getSimulatorActions, list: this.state.list, currentWebviewID: this.state.currentWebviewID }), e.createElement(i, { currentWebviewID: this.state.currentWebviewID }), t, e.createElement("div", { style: u }, e.createElement(s, { project: this.props.project, _openNewWindowWebview: this._openNewWindowWebview, tabBar: this.state.tabBar, showTabBar: this.state.showTabBar, currentWebviewID: this.state.currentWebviewID })), e.createElement(h, null))
+                return React.createElement("div", { className: "simulator-wrapper" }, React.createElement(toolbar, { getSimulatorActions: this.getSimulatorActions, list: this.state.list, currentWebviewID: this.state.currentWebviewID }), React.createElement(scanDialog, { currentWebviewID: this.state.currentWebviewID }), t, React.createElement("div", { style: u }, React.createElement(webviewtab, { project: this.props.project, _openNewWindowWebview: this._openNewWindowWebview, tabBar: this.state.tabBar, showTabBar: this.state.showTabBar, currentWebviewID: this.state.currentWebviewID })), React.createElement(webviewBackwardMask, null))
             }
         });
     _exports = _
