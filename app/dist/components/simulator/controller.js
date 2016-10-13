@@ -362,10 +362,17 @@ function init() {
                     var n = a == this.state.currentWebviewID ? {} : l.webviewDisplayNone,
                         c = this.state.list[a],
                         p = this.isTabWebview(c.href);
-                    t.push(React.createElement("div", { key: a, style: n }, React.createElement(webview, { project: this.props.project, offset: this.state.offset, ref: "webview" + a, isMatch: p, href: c.href, config: c.config, hideBack: !!c.hideBack, webviewID: a, goBack: this.goBack, addAsWebview: this.addAsWebview, getSimulatorActions: this.getSimulatorActions, postAppRoute: this.postAppRoute })))
+                    t.push(React.createElement("div", { key: a, style: n }, 
+                    	React.createElement(webview, { project: this.props.project, offset: this.state.offset, ref: "webview" + a, isMatch: p, href: c.href, config: c.config, hideBack: !!c.hideBack, webviewID: a, goBack: this.goBack, addAsWebview: this.addAsWebview, getSimulatorActions: this.getSimulatorActions, postAppRoute: this.postAppRoute })))
                 }
                 var u = { width: this.state.offset.width, margin: "0 auto" };
-                return React.createElement("div", { className: "simulator-wrapper" }, React.createElement(toolbar, { getSimulatorActions: this.getSimulatorActions, list: this.state.list, currentWebviewID: this.state.currentWebviewID }), React.createElement(scanDialog, { currentWebviewID: this.state.currentWebviewID }), t, React.createElement("div", { style: u }, React.createElement(webviewtab, { project: this.props.project, _openNewWindowWebview: this._openNewWindowWebview, tabBar: this.state.tabBar, showTabBar: this.state.showTabBar, currentWebviewID: this.state.currentWebviewID })), React.createElement(webviewBackwardMask, null))
+                return React.createElement("div", { className: "simulator-wrapper" }, 
+                	React.createElement(toolbar, { getSimulatorActions: this.getSimulatorActions, list: this.state.list, currentWebviewID: this.state.currentWebviewID }), 
+                	React.createElement(scanDialog, { currentWebviewID: this.state.currentWebviewID }), 
+                	t, 
+                	React.createElement("div", { style: u }, 
+                		React.createElement(webviewtab, { project: this.props.project, _openNewWindowWebview: this._openNewWindowWebview, tabBar: this.state.tabBar, showTabBar: this.state.showTabBar, currentWebviewID: this.state.currentWebviewID })), 
+                	React.createElement(webviewBackwardMask, null))
             }
         });
     _exports = _
