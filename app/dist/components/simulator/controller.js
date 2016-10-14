@@ -25,19 +25,19 @@ function init() {
         _ = React.createClass({
             displayName: "Controller",
             getInitialState: function() {
-                var e = "app/html/about.html",
-                    t = {},
+                var url = "app/html/about.html",
+                    tabBar = {},
                     r = webviewStores.getOffset(),
-                    i = {};
+                    window_config = {};
                 if (this.props.project) {
-                    var s = this.props.project;
-                    e = tools.getWeappURL(s);
+                    var project = this.props.project;
+                    url = tools.getWeappURL(project);
                     try {
-                        var o = tools.getProjectConfig(s);
-                        t = o.tabBar || {}, i = o.window || {}
+                        var o = tools.getProjectConfig(project);
+                        tabBar = o.tabBar || {}, window_config = o.window || {}
                     } catch (n) {}
                 }
-                return { currentWebviewID: 0, showCard: !1, tabBar: t, showTabBar: !1, href: e, offset: r, cardInfo: {}, list: { 0: { href: e, dataURI: "", preWebviewID: 0, config: i } } }
+                return { currentWebviewID: 0, showCard: !1, tabBar: tabBar, showTabBar: !1, href: url, offset: r, cardInfo: {}, list: { 0: { href: url, dataURI: "", preWebviewID: 0, config: window_config } } }
             },
             setAnimateImg: function(e, r) {
                 var i = document.createElement("div");

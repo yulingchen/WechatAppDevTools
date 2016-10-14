@@ -1,9 +1,9 @@
 "use strict";
 
 function init() {
-    var e = require("path"),
-        t = require("fs"),
-        r = require("url"),
+    var path = require("path"),
+        fs = require("fs"),
+        url = require("url"),
         o = require("../../stores/projectStores.js"),
         n = (require("../../config/config.js"), require("../../config/dirConfig.js")),
         s = require("../../stores/windowStores.js");
@@ -23,7 +23,7 @@ function init() {
             return ""
         }
         var a = n.pages || [];
-        return r.resolve(o, a[0] + ".html")
+        return url.resolve(o, a[0] + ".html")
     }, _exports.parseErr = function(e) {
         return e = JSON.stringify(e), e.replace(/\\/g, "/").replace(/`/g, "\\`")
     }, _exports.getPageJSON = function(r, o) {
@@ -31,19 +31,19 @@ function init() {
             var n = this.getBaseURL(r);
             o = o.replace(n, "").replace(/\?.*/g, "");
             var s = r.projectpath,
-                a = JSON.parse(t.readFileSync(e.join(s, "app.json"), "utf8")),
-                i = e.join(s, o.replace(".html", ".json")),
-                p = t.existsSync(i),
+                a = JSON.parse(fs.readFileSync(path.join(s, "app.json"), "utf8")),
+                i = path.join(s, o.replace(".html", ".json")),
+                p = fs.existsSync(i),
                 c = {};
-            return p && (c = JSON.parse(t.readFileSync(i, "utf8"))), Object.assign({}, a.window, c)
+            return p && (c = JSON.parse(fs.readFileSync(i, "utf8"))), Object.assign({}, a.window, c)
         } catch (u) {
             return {}
         }
     }, _exports.getProjectConfig = function(r, o) {
-        var n = r.projectpath,
-            s = e.join(n, "app.json"),
+        var projectpath = r.projectpath,
+            appjsonpath = path.join(projectpath, "app.json"),
             a = void 0;
-        try { a = t.readFileSync(s, "utf8") } catch (i) {
+        try { a = fs.readFileSync(appjsonpath, "utf8") } catch (i) {
             throw "Read app.json error：" + i.toString()
         }
         var p = void 0;
@@ -55,7 +55,7 @@ function init() {
         var t = this.getProjectHashFromURL(e);
         return o.getProjectByHash(t)
     }, _exports.getFileRelativePath = function(e, t) {
-        var o = r.parse(e),
+        var o = url.parse(e),
             n = o.pathname || "";
         if (n = n.replace(/^\//, ""), "" === n) {
             var s = void 0;
@@ -69,15 +69,15 @@ function init() {
     }, _exports.getFilePath = function(t, r) {
         var o = this.getFileRelativePath(t, r),
             n = r.projectpath;
-        return e.join(n, o)
+        return path.join(n, o)
     }, _exports.isWxmlFile = function(e) {
         return /\.wxml$/.test(e)
     }, _exports.isWxssFile = function(e) {
         return /\.wxss$/.test(e)
     }, _exports.isWxmlURL = function(t) {
-        var o = r.parse(t),
+        var o = url.parse(t),
             n = o.pathname,
-            s = e.extname(n);
+            s = path.extname(n);
         return "" === s || ".html" === s || ".wxml" === s
     }, _exports.getWxImports = function(e) {
         var t = e.match(/\<wx-import.*\<\/wx-import\>/g) || [],
@@ -92,15 +92,15 @@ function init() {
     }, _exports.getPageCssFiles = function(r, o, n) {
         var s = this.getFileRelativePath(r, o),
             a = s.replace(/\..*$/g, ".wxss");
-        return t.existsSync(e.join(o.projectpath, a)) ? e.parse(a).base : ""
+        return fs.existsSync(path.join(o.projectpath, a)) ? path.parse(a).base : ""
     }, _exports.getProjectStorage = function(r) {
         var o = r.appid,
             a = r.appname,
             i = s.getUserInfo(),
             p = i ? i.openid : "unknow",
-            c = e.join(n.WeappStorage, o + "_" + a + "_" + p + ".data.json"),
+            c = path.join(n.WeappStorage, o + "_" + a + "_" + p + ".data.json"),
             u = void 0;
-        try { u = t.readFileSync(c, "utf8") } catch (g) { u = "{}" }
+        try { u = fs.readFileSync(c, "utf8") } catch (g) { u = "{}" }
         return JSON.parse(u)
     }
 }
