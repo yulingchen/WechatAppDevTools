@@ -25,7 +25,7 @@ function init() {
         }
     }
 
-    function n(e, r) {
+    function getScripts(e, r) {
         var n = e.project,
             t = n.hash;
         i(n);
@@ -50,7 +50,7 @@ function init() {
         })
     }
 
-    function t(e, r, n) {
+    function getFile(e, r, n) {
         i(e);
         var t = e.hash,
             o = F[t].cache;
@@ -80,14 +80,14 @@ function init() {
         })
     }
 
-    function c(e, r) {
+    function getAllWXMLFileList(e, r) {
         i(e);
         var n = e.hash,
             t = F[n].wxmlFileList;
         t.length ? process.nextTick(function() { r(null, t) }) : o(e, r)
     }
 
-    function s(e, r) {
+    function getAllJSFileList(e, r) {
         i(e);
         var n = e.hash,
             t = F[n].jsFileList;
@@ -111,7 +111,7 @@ function init() {
         d.info("projectManager.js project " + i + " unable " + r), F[i].cache = {}
     });
     var q = Object.assign({}, p.prototype, { fileChange: function(e, r, i, n) { this.emit("FILE_CHANGE", e, r, i, n) } });
-    _exports = { getFile: t, manager: q, getAllWXMLFileList: c, getAllJSFileList: s, getScripts: n }
+    _exports = { getFile: getFile, manager: q, getAllWXMLFileList: getAllWXMLFileList, getAllJSFileList: getAllJSFileList, getScripts: getScripts }
 }
 var _exports;
 init(), module.exports = _exports;
